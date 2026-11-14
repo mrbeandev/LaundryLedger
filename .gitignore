@@ -1,0 +1,23 @@
+# Build
+.gradle/
+.gradle-home/
+build/
+.kotlin/
+local.properties
+*.apk
+*.aab
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Secrets
+keystore/
+*.jks
+*.keystore
+
+# Local only
+CLAUDE.md
+docs/
+art/

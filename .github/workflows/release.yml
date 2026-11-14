@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to build and release (e.g. v1.2.0). Must already exist."
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Decode signing key
+        run: echo "${{ secrets.SIGNING_KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/release.jks"
+
+      - name: Unit tests
+        run: ./gradlew --no-daemon testDebugUnitTest
+
+      - name: Build signed APK
+        env:
+          VERSION_NAME: ${{ env.TAG }}
+          SIGNING_STORE_FILE: ${{ runner.temp }}/release.jks
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: |
+          ./gradlew --no-daemon assembleRelease
+          mkdir -p dist
+          cp app/build/outputs/apk/release/app-release.apk "dist/LaundryLedger-${TAG}.apk"
+          (cd dist && sha256sum *.apk > SHA256SUMS.txt)
+
+      - name: Release notes
+        run: |
+          PREV=$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || true)
+          if [ -f "release-notes/${TAG}.md" ]; then
+            cp "release-notes/${TAG}.md" notes.md
+          else
+            echo "## Changes" > notes.md
+            if [ -n "$PREV" ]; then RANGE="$PREV..$TAG"; else RANGE="$TAG"; fi
+            git log --pretty='- %s' "$RANGE" >> notes.md
+          fi
+          printf '\n\n---\nInstall: download the APK below and open it. Already installed? Open Laundry Ledger > Settings > Check for updates.\n' >> notes.md
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" dist/* --title "Laundry Ledger ${TAG}" --notes-file notes.md
+          fi
