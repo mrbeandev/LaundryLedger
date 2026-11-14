@@ -61,6 +61,8 @@ Cloud backup is turned off. Moving to a new phone with Android's device-to-devic
 2. Open it and allow "Install unknown apps" for your browser when asked.
 3. Optional: check the file against `SHA256SUMS.txt` from the same release.
 
+Google Play Protect may warn about an app it hasn't seen before, because Laundry Ledger isn't on the Play Store. Tap **More details > Install anyway**. The source is all here if you want to check it or build it yourself.
+
 Requires Android 8.0 (API 26) or newer.
 
 ## Build from source
