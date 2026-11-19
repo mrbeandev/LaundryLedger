@@ -57,8 +57,6 @@ class Prefs(context: Context) {
         get() = ClothType.of(sp.getString("last_type", ClothType.SHIRT.name)!!)
         set(v) = sp.edit().putString("last_type", v.name).apply()
 
-    fun lastQty(type: ClothType): Int = sp.getInt("qty_${type.name}", 1)
-    fun setLastQty(type: ClothType, qty: Int) = sp.edit().putInt("qty_${type.name}", qty).apply()
 
     var lastUpdateCheck: Long
         get() = sp.getLong("last_update_check", 0L)

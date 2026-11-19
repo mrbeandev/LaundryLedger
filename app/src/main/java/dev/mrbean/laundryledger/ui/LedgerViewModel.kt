@@ -47,7 +47,6 @@ class LedgerViewModel(app: Application) : AndroidViewModel(app) {
 
     fun add(batchId: Long, type: ClothType, qty: Int) = viewModelScope.launch {
         prefs.lastType = type
-        prefs.setLastQty(type, qty)
         dao.addToBatch(batchId, type, qty)
     }
 

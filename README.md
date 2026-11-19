@@ -39,7 +39,7 @@ After that, the app checks for updates by itself. You can also update from **Set
 ## Features
 
 - **Fast entry.** Large cloth tiles, a quantity stepper and one Add button, all within thumb reach. Adding the same type again adds to its count.
-- **Remembers your habits.** It keeps your last cloth type and the quantity you usually use for each type, so 4 shirts and 2 towels are already filled in next time.
+- **Picks up where you left off.** Your last cloth type is already selected, and the count always starts at 1, so adding pieces one by one is a single tap each.
 - **Only your clothes.** On first launch, pick Male, Female or Prefer not to say, then choose the clothes you actually send. There are 35 types, from shirts, banians and lungis to sarees, kurtis and dupattas, plus towels, bedsheets and blankets. You can change this any time in Settings.
 - **Check returns piece by piece.** Tap a row for each piece that comes back. Rows turn green when complete, and a bar shows how many are still missing.
 - **Batches at a glance.** Clothes still at the laundry are shown at the top, past batches below in History, with any missing pieces flagged.

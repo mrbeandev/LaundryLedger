@@ -15,7 +15,7 @@ android {
         minSdk = 26
         targetSdk = 35
         // CI passes the git tag (v1.2.3 -> 1.2.3). versionCode = major*10000 + minor*100 + patch.
-        val vName = (System.getenv("VERSION_NAME") ?: "1.1.0").removePrefix("v")
+        val vName = (System.getenv("VERSION_NAME") ?: "1.1.1").removePrefix("v")
         val (maj, min, pat) = (vName.split(".").map { it.toIntOrNull() ?: 0 } + listOf(0, 0, 0)).take(3)
         versionCode = maj * 10000 + min * 100 + pat
         versionName = vName

@@ -118,7 +118,7 @@ fun BatchScreen(vm: LedgerViewModel, batchId: Long, onBack: () -> Unit) {
     var selected by rememberSaveable {
         mutableStateOf(vm.prefs.lastType.takeIf { it in enabled } ?: enabled.firstOrNull() ?: ClothType.SHIRT)
     }
-    var qty by rememberSaveable { mutableIntStateOf(vm.prefs.lastQty(vm.prefs.lastType)) }
+    var qty by rememberSaveable { mutableIntStateOf(1) }
     var flashType by remember { mutableStateOf<String?>(null) }
     var flashTick by remember { mutableLongStateOf(0L) }
     var confirmDelete by remember { mutableStateOf(false) }
@@ -186,7 +186,7 @@ fun BatchScreen(vm: LedgerViewModel, batchId: Long, onBack: () -> Unit) {
                                         },
                                         onClick = {
                                             selected = item.clothType
-                                            qty = vm.prefs.lastQty(item.clothType)
+                                            qty = 1
                                         },
                                     ) else CheckRow(
                                         item = item,
@@ -223,12 +223,13 @@ fun BatchScreen(vm: LedgerViewModel, batchId: Long, onBack: () -> Unit) {
                     onSelect = {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         selected = it
-                        qty = vm.prefs.lastQty(it)
+                        qty = 1
                     },
                     onQty = { qty = it.coerceIn(1, 99) },
                     onAdd = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         vm.add(batchId, selected, qty)
+                        qty = 1
                         flashType = selected.name
                         flashTick = System.nanoTime()
                     },
